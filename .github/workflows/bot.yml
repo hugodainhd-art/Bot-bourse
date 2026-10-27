@@ -1,12 +1,12 @@
 name: bot-bourse
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 permissions:
-  contents: writeconcurrency:
+  contents: write
+concurrency:
   group: bot-bourse
-
 jobs:
   run:
     runs-on: ubuntu-latest
