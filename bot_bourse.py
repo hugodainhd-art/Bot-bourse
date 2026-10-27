@@ -130,4 +130,13 @@ def executer():
 
 
 if __name__ == "__main__":
+    if os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch":
+        r = requests.post(
+            f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+            json={"chat_id": CHAT_ID, "text": "✅ Bot connecté. Les signaux arriveront ici."},
+            timeout=15,
+        )
+        print(r.status_code, r.text)
+        r.raise_for_status()
     executer()
+
