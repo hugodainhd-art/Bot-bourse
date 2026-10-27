@@ -48,6 +48,9 @@ NEG = ["plunge", "fall", "miss", "downgrade", "lawsuit", "probe", "recall", "los
        "ban", "fraud", "crash", "layoff", "warning", "down", "drop", "slump", "sell-off",
        "blow", "tumble", "sink", "tariff", "fear", "bearish"]
 
+SPECULATIF = ["prediction", "forecast", "predicts", "could ", "should you", "will ", "?",
+              "how to", "best "]
+
 AIDE = ("Commandes :\n"
         "/portefeuille : voir tes positions et ton cash\n"
         "/vendu nom [prix] : enregistrer une vente (ex : /vendu nvidia 125.4)\n"
@@ -88,7 +91,8 @@ def telegram(texte, boutons=None):
 
 # ---------- indicateurs ----------
 def compte(texte, mots):
-    return sum(1 for m in mots if re.search(r"\b" + re.escape(m), texte))
+    return sum(1 for m in mots
+               if re.search(r"\b" + re.escape(m) + r"(?:s|es|ed|d|ing|ped|ping)?\b", texte))
 
 
 def ema(s, n):
@@ -122,6 +126,8 @@ def actus(requete):
         except Exception:
             continue
         t = e.title.lower()
+        if any(w in t for w in SPECULATIF):
+            continue  # on ignore les titres de spéculation / clickbait
         p, n = compte(t, POS), compte(t, NEG)
         score += (p > n) - (n > p)
         titres.append(e.title)
